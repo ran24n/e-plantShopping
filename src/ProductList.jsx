@@ -302,18 +302,17 @@ function ProductList({ onHomeClick }) {
                             <p>{plant.cost}</p>
             
                             <button
-                                onClick={() => handleAddToCart(plant)}
-                            >
-                                {addedToCart[plant.name]
-                                    ? "Added to Cart"
-                                    : "Add to Cart"}
-                            </button>
+                            onClick={() => handleAddToCart(plant)}
+                            disabled={addedToCart[plant.name]}
+>
+    {addedToCart[plant.name]
+        ? "Added to Cart"
+        : "Add to Cart"}
+</button>
                         </div>
                     ))
-                )}
-            </div>
-
-
+                )
+                }
                 </div>
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
