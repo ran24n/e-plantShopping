@@ -19,4 +19,3 @@ React Router
 Redux Toolkit
 React Redux
 CSS
-# coding-project-template
