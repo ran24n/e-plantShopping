@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
 import './ProductList.css';
 import CartItem from './CartItem';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { addItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
 
+    // Get cart items from Redux
+    const cartItems = useSelector((state) => state.cart.items);
+
+    // Calculate total number of items in cart
+    const cartItemCount = cartItems.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+    // Track which products have been added to the cart
     const [addedToCart, setAddedToCart] = useState({});
+
+    // Control cart visibility
     const [showCart, setShowCart] = useState(false);
 
     const plantsArray = [
@@ -222,6 +234,7 @@ function ProductList({ onHomeClick }) {
         }
     ];
 
+    // Navigation styles
     const styleObj = {
         backgroundColor: '#4CAF50',
         color: '#fff',
@@ -245,33 +258,37 @@ function ProductList({ onHomeClick }) {
         textDecoration: 'none',
     };
 
+    // Home button
     const handleHomeClick = (e) => {
         e.preventDefault();
         onHomeClick();
     };
 
+    // Cart button
     const handleCartClick = (e) => {
         e.preventDefault();
         setShowCart(true);
     };
 
+    // Plants button
     const handlePlantsClick = (e) => {
         e.preventDefault();
         setShowCart(false);
     };
 
+    // Continue shopping
     const handleContinueShopping = (e) => {
         e.preventDefault();
         setShowCart(false);
     };
 
-    // Sends the selected plant to Redux
+    // Add product to cart
     const handleAddToCart = (product) => {
         dispatch(addItem(product));
 
         setAddedToCart((prevState) => ({
             ...prevState,
-            [product.id]: true,
+            [product.name]: true,
         }));
     };
 
@@ -309,6 +326,7 @@ function ProductList({ onHomeClick }) {
 
                 <div style={styleObjUl}>
 
+                    {/* Plants link */}
                     <div>
                         <a
                             href="#"
@@ -319,13 +337,21 @@ function ProductList({ onHomeClick }) {
                         </a>
                     </div>
 
+                    {/* Cart link */}
                     <div>
                         <a
                             href="#"
                             onClick={handleCartClick}
                             style={styleA}
                         >
-                            <h1 className="cart">
+                            <h1
+                                className="cart"
+                                style={{
+                                    position: 'relative',
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}
+                            >
 
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -361,6 +387,27 @@ function ProductList({ onHomeClick }) {
                                     />
                                 </svg>
 
+                                {/* Cart item count */}
+                                <span
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-5px',
+                                        right: '-5px',
+                                        backgroundColor: 'red',
+                                        color: 'white',
+                                        borderRadius: '50%',
+                                        width: '28px',
+                                        height: '28px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold'
+                                    }}
+                                >
+                                    {cartItemCount}
+                                </span>
+
                             </h1>
                         </a>
                     </div>
@@ -377,10 +424,12 @@ function ProductList({ onHomeClick }) {
 
                         <div key={category.category}>
 
+                            {/* Category Name */}
                             <h1>
                                 <div>{category.category}</div>
                             </h1>
 
+                            {/* Products */}
                             <div className="product-list">
 
                                 {category.plants.map((plant) => {
